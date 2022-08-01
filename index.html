@@ -17,9 +17,9 @@ div.tooltip {
 }
 
 </style>
-<h1> What's the relationship between a movie's "Budget" and it's "Revenue"? </h1>
-<b1> Shown below is a scatterplot of all movies with a budget above $100M, plotted by their budgets in the millions on the x-axis, and their revenue in the millions on their y-axis. </b1>
-<b2> <br/>You can see a general trend of higher budgetted movies having higher revenues, but there are still datapoints showing high budgets with low revenue and vice versa. Why do the 2 highlighted points exist?</b2>
+<h1> How do budget and revenue relate in your favorite movies? </h1>
+<b1> Hover your mouse over the orange datapoint to see what movie did so poorly despite it's decent ratings and big budget. </b1>
+<b2> <br/></b2>
 <body>
 
 <!-- load the d3.js library -->    	
@@ -92,6 +92,7 @@ d3.csv("https://miketeufel1.github.io/project/movies3.csv", function(error, data
      .attr("fill", function(d) {
             if (d.vote_average >= 7.5) {return "green"}
             else 	if (d.vote_average < 5.5) { return "red" }
+            else 	if (d.original_title == "The Lone Ranger") {return "orange"}
               else { return "lightgray" }
         ;})
   
@@ -132,7 +133,9 @@ d3.csv("https://miketeufel1.github.io/project/movies3.csv", function(error, data
 });
 
 </script>
-  <b3> <br/>The movie highlighted in blue has a Budget of $125M and a revenue of $1.3B</b3>
-  <b4> <br/>The movie highlighted in orange has a Budget of $255M and a revenue of $89.3M</b4>
-  <b4> <br/> <br/>What other factors might be at play here?</b4>
+  <b3> <br/>It was "The Lone Ranger"! Why do you think it did so poorly?</b3>
+  <b4> <br/>Hover your mouse over the other datapoints to see how their Budget and IMDB ratings relate to their revenue. Notice any trends?</b4>
+  <b4> <br/>How do budget and revenue compare in some of your favorite movies?</b4>
+  <b4> <br/> <br/></b4>
+  <a href="https://miketeufel1.github.io/project_2/">go to previous page</a>
 </body>
