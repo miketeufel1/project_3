@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> /* set the CSS */
+
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 270px;
+  height: 56px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+</style>
+<h1> What's the relationship between a movie's "Budget" and it's "Revenue"? </h1>
+<b1> Shown below is a scatterplot of all movies with a budget above $100M, plotted by their budgets in the millions on the x-axis, and their revenue in the millions on their y-axis. </b1>
+<b2> <br/>You can see a general trend of higher budgetted movies having higher revenues, but there are still datapoints showing high budgets with low revenue and vice versa. Why do the 2 highlighted points exist?</b2>
+<body>
+
+<!-- load the d3.js library -->    	
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 50, right: 100, bottom: 100, left: 100},
+    width = 960 - margin.left - margin.right,
+    height = 700 - margin.top - margin.bottom;
+
+// parse the date / time
+var parseTime = d3.timeParse("%d-%b-%y");
+var formatTime = d3.timeFormat("%e %B");
+
+// set the ranges
+var x = d3.scaleLinear().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+  let logScale = d3.scaleLog()
+logScale(10);
+
+// define the line
+var valueline = d3.line()
+    .x(function(d) { return x(d.open); })
+    .y(function(d) { return y(d.close); });
+
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// Get the data
+d3.csv("https://miketeufel1.github.io/project/movies3.csv", function(error, data) {
+  if (error) throw error;
+
+  // format the data
+  data.forEach(function(d) {
+      d.budget = +d.budget/1000000;
+      d.revenue = +d.revenue/1000000;
+      d.original_title = d.original_title;
+      d.vote_average = +d.vote_average;
+      d.release_year = d.release_year;
+  });
+
+  // scale the range of the data
+  x.domain([100, d3.max(data, function(d) { return d.budget; })]);
+  y.domain([0, d3.max(data, function(d) { return d.revenue; })]);
+
+
+  // add the dots with tooltips
+  svg.selectAll("dot")
+     .data(data)
+   .enter().append("circle")
+  	  .filter(function(d) { if (d.budget < 100) {return false}
+            else if (d.vote_average <= 4) {return true}
+            else { return true } })
+     .attr("r", 5)
+     .attr("cx", function(d) { return x(d.budget); })
+     .attr("cy", function(d) { return y(d.revenue); })
+  
+     .attr("fill", function(d) {
+            if (d.vote_average >= 7.5) {return "green"}
+            else 	if (d.vote_average < 5.5) { return "red" }
+              else { return "lightgray" }
+        ;})
+  
+     .attr('fill-opacity', function(d) {
+            if (d.vote_average >= 7.5) {return .8}
+            else 	if (d.vote_average <= 5) { return .8 }
+              else { return .8 }
+        ;})
+  
+  
+     .on("mouseover", function(d) {
+       div.transition()
+         .duration(200)
+         .style("opacity", .9);
+       div.html(d.original_title +"("+d.release_year+")"+ 
+                "<br/>" + "Budget: $" + d.budget+"M"+ 
+                "<br/>" + "Revenue: $" + Math.round(d.revenue*100)/100+"M"+
+                "<br/>" + "IMDB rating: " + d.vote_average)
+         .style("left", (d3.event.pageX) + "px")
+         .style("top", (d3.event.pageY - 28) + "px");
+       })
+     .on("mouseout", function(d) {
+       div.transition()
+         .duration(5000)
+         .style("opacity", 0);
+       });
+
+
+  // add the X Axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  // add the Y Axis
+  svg.append("g")
+      .call(d3.axisLeft(y));
+
+});
+
+</script>
+  <b3> <br/>The movie highlighted in blue has a Budget of $125M and a revenue of $1.3B</b3>
+  <b4> <br/>The movie highlighted in orange has a Budget of $255M and a revenue of $89.3M</b4>
+  <b4> <br/> <br/>What other factors might be at play here?</b4>
+</body>
