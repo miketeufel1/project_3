@@ -129,7 +129,32 @@ d3.csv("https://miketeufel1.github.io/project/movies3.csv", function(error, data
   // add the Y Axis
   svg.append("g")
       .call(d3.axisLeft(y));
-
+  
+    //title
+    svg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", 300)
+    .attr("y", 0)
+    .text("Movie Revenue vs. Budget");
+  
+  // X-axis label
+  svg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", 400)
+    .attr("y", height + 35)
+    .text("Budget (millions of dollars)");
+  
+  // Y-axis label
+  svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("x", -200)
+    .attr("y", -60)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("Revenue (millions of dollars)");
 });
 
 </script>
