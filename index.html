@@ -93,7 +93,7 @@ d3.csv("https://miketeufel1.github.io/project/movies3.csv", function(error, data
             if (d.vote_average >= 7.5) {return "green"}
             else 	if (d.vote_average < 5.5) { return "red" }
             else 	if (d.original_title == "The Lone Ranger") {return "orange"}
-              else { return "lightgray" }
+              else { return "gray" }
         ;})
   
      .attr('fill-opacity', function(d) {
